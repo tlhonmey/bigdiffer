@@ -1,0 +1,30 @@
+PURPOSE:
+
+Need to compute a reasonably-sized delta between two 10GB tarballs without requiring 2TB of memory?  This will do the job in a brutal, ugly, effective manner.
+
+
+BUILD:
+
+
+gcc -o chunker chunker.c
+
+Everything else is in Python.  You'll need the sqlite module.
+
+
+USAGE:
+
+bigdiffer.sh amalgamates all the utilities into one callable so that you can just use it.  Be aware that it will make a mess of your disk and memory depending on how big the files are, especially if you abort it early.
+
+QUESTIONS:
+
+Why aren't I using a rolling hash?
+
+I tried it.  I couldn't get consistent results.  Because of the vast tracts of nulls in tar files that have lots of little files I
+was getting things like good chunk sizes for the first half of the file, and then the second half of the file as a single chunk.
+So I made it use the vast tracts of nulls as break points and called it a day.  It works great on tar files.  It works ok on other things.
+It's modular enough that you can easily substitute your own chunker if a different algorithm will work better for the data in question.
+
+Doesn't this use a lot more memory than it needs to?
+
+Yep.  If you're actually using it and it's actually a problem for you, file a bug report and I'll actually fix it.  
+Otherwise, it works for what I need it for.
