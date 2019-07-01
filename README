@@ -8,7 +8,7 @@ BUILD:
 
 gcc -o chunker chunker.c
 
-Everything else is in Python.  You'll need the sqlite module.
+Everything else is in Python or Perl.  You'll need the sqlite module for Python.
 
 
 USAGE:
@@ -23,6 +23,11 @@ I tried it.  I couldn't get consistent results.  Because of the vast tracts of n
 was getting things like good chunk sizes for the first half of the file, and then the second half of the file as a single chunk.
 So I made it use the vast tracts of nulls as break points and called it a day.  It works great on tar files.  It works ok on other things.
 It's modular enough that you can easily substitute your own chunker if a different algorithm will work better for the data in question.
+
+If you want you can try chunker-rollingaverage.c  It's not the kind of hash most people use, but it gives me the results I want with the 
+data I currently have.  Note that it increases the space and memory requirements for calculation considerably, but it does a reasonable job
+of reusing data segments from files instead of mostly just wholesale replacing any file that changed.  Controlcompactor.pl will go through
+afterward and consolidate sequential chunk references, which gets the size back down to something reasonable.
 
 Doesn't this use a lot more memory than it needs to?
 
