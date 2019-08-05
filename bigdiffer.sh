@@ -21,6 +21,9 @@ echo "comparing..."
 time python2 $EXEDIR/dbdiffcomp.py left.db right.hashed > diff.dirty
 echo "discarding unneded control data..."
 time cat diff.dirty | cut -d"|" -f1,2 > $3.control
+echo "compacting control file"
+time perl controlcompactor.pl $3.control > $3.control.compact
+mv $3.control.compact $3.control
 echo "compiling data file..."
 time python2 $EXEDIR/chunkgrabber.py $RIGHT $3.control $3.data
 
