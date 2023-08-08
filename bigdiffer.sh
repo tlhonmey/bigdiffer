@@ -11,25 +11,25 @@ $EXEDIR/chunker $RIGHT > right.chunks &
 
 time wait
 echo "hashing..."
-python2 $EXEDIR/hasher.py "$LEFT" left.chunks left.hashed & 
-python2 $EXEDIR/hasher.py "$RIGHT" right.chunks right.hashed & 
+python3 $EXEDIR/hasher.py "$LEFT" left.chunks left.hashed & 
+python3 $EXEDIR/hasher.py "$RIGHT" right.chunks right.hashed & 
 
 time wait
 echo "indexing..."
-time python2 $EXEDIR/dbloader.py left.hashed left.db
+time python3 $EXEDIR/dbloader.py left.hashed left.db
 echo "comparing..."
-time python2 $EXEDIR/dbdiffcomp.py left.db right.hashed > diff.dirty
+time python3 $EXEDIR/dbdiffcomp.py left.db right.hashed > diff.dirty
 echo "discarding unneded control data..."
 time cat diff.dirty | cut -d"|" -f1,2 > $3.control
 echo "compacting control file"
 time perl $EXEDIR/controlcompactor.pl $3.control > $3.control.compact
 mv $3.control.compact $3.control
 echo "compiling data file..."
-time python2 $EXEDIR/chunkgrabber.py $RIGHT $3.control $3.data
+time python3 $EXEDIR/chunkgrabber.py $RIGHT $3.control $3.data
 
 echo "testing patch:"
 echo "  applying..."
-time python2 $EXEDIR/patcher.py $LEFT $3.data $3.control $3.patchtest
+time python3 $EXEDIR/patcher.py $LEFT $3.data $3.control $3.patchtest
 echo "  verifying..."
 time diff $RIGHT $3.patchtest
 echo "Cleaning up..."
